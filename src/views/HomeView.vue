@@ -38,6 +38,10 @@ const filteredProducts = computed(() => {
 });
 
 const applyFilters = () => {
+  if (tempMaxPrice.value < tempMinPrice.value) {
+    tempMaxPrice.value = tempMinPrice.value; // Выравниваем
+  }
+
   minPrice.value = tempMinPrice.value || 0;
   maxPrice.value = tempMaxPrice.value || Infinity;
   selectedCategory.value = tempSelectedCategory.value || '';
@@ -73,16 +77,18 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
-    <div v-if="productsLoading"
-class="font-semibold text-lg mx-auto">
+    <div
+      v-if="productsLoading"
+      class="font-semibold text-lg mx-auto"
+    >
       Загрузка...
     </div>
 
-    <div v-if="!productsLoading && productsError"
-class="font-semibold text-lg text-rose-600 mx-auto">
-      Возникла ошибка.
-      <br>
-      Попробуйте позже.
+    <div
+      v-if="!productsLoading && productsError"
+      class="font-semibold text-lg text-rose-600 mx-auto"
+    >
+      {{ productsError }}
     </div>
 
     <template v-if="productsList?.length && !productsError && !productsLoading">
@@ -99,8 +105,10 @@ class="font-semibold text-lg text-rose-600 mx-auto">
               <SelectValue placeholder="Выберите категорию" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup v-for="category of categories"
-:key="category.value">
+              <SelectGroup
+                v-for="category of categories"
+                :key="category.value"
+              >
                 <SelectItem :value="category.value">
                   {{ category.name }}
                 </SelectItem>
@@ -112,26 +120,38 @@ class="font-semibold text-lg text-rose-600 mx-auto">
         <div class="flex space-x-2">
           <Label class="w-6/12">
             Мин. цена
-            <Input v-model="tempMinPrice"
-type="number"/>
+            <Input
+              v-model="tempMinPrice"
+              type="number"
+            />
           </Label>
 
           <Label class="w-6/12">
             Макс. цена
-            <Input v-model="tempMaxPrice"
-type="number"/>
+            <Input
+              v-model="tempMaxPrice"
+              type="number"
+            />
           </Label>
         </div>
 
         <div class="space-y-2">
-          <Button class="w-full"
-variant="outline"
-size="xs"
-@click="resetFilters">Сброс</Button>
-          <Button class="w-full"
-variant="secondary"
-size="xs"
-@click="applyFilters">Применить</Button>
+          <Button
+            class="w-full"
+            variant="outline"
+            size="xs"
+            @click="resetFilters"
+          >
+            Сброс
+          </Button>
+          <Button
+            class="w-full"
+            variant="secondary"
+            size="xs"
+            @click="applyFilters"
+          >
+            Применить
+          </Button>
         </div>
       </aside>
 
@@ -142,9 +162,11 @@ size="xs"
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card class="shadow-md break-words flex flex-col"
-v-for="product of filteredProducts"
-:key="product.id">
+          <Card
+            class="shadow-md break-words flex flex-col"
+            v-for="product of filteredProducts"
+            :key="product.id"
+          >
             <CardHeader>
               <CardDescription class="capitalize">
                 {{ product.category }}
@@ -159,18 +181,18 @@ v-for="product of filteredProducts"
                 :src="product.image"
                 :alt="product.title"
                 class="w-full h-[200px] object-contain"
-              />
+              >
               <div class="pt-3">
-              <span class="font-semibold">
-                Цена:
-              </span>
+                <span class="font-semibold">
+                  Цена:
+                </span>
                 <span>
-                {{ product.price }}
-              </span>
+                  {{ product.price }}
+                </span>
               </div>
             </CardContent>
             <CardFooter>
-              <Button @click="basketStore.basketItemsIds.includes(product.id) ? basketStore.deleteFromBasket(product) : basketStore.addToBasket(product)">
+              <Button @click="basketStore[basketStore.basketItemsIds.includes(product.id) ? 'deleteFromBasket' : 'addToBasket'](product)">
                 {{ basketStore.basketItemsIds.includes(product.id) ? 'Добавлено' : 'В корзину' }}
               </Button>
             </CardFooter>

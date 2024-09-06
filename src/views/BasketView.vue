@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow, Table } from '@/components/ui/table/index.js';
+import { TableBody, TableCell, TableHead, TableHeader, TableRow, Table } from '@/components/ui/table/index.js';
 import { useBasketStore } from '@/stores/basket.js';
 import { computed } from 'vue';
 import { Button } from '@/components/ui/button/index.js';
@@ -18,18 +18,19 @@ const router = useRouter();
 const basketStore = useBasketStore();
 const basketList = computed(() => basketStore.data);
 const countString = computed(() => {
-  if (!basketList.value?.length) {
-    return '';
-  }
+  if (!basketList.value?.length) return '';
 
-  let sum = 0, count = 0;
+  const { count, sum } = basketList.value.reduce(
+    (acc, { quantity, price }) => {
+      acc.count += quantity;
+      acc.sum += quantity * price;
 
-  basketList.value.forEach(({ quantity, price }) => {
-    sum += quantity * price;
-    count += quantity;
-  });
+      return acc;
+    },
+    { count: 0, sum: 0 }
+  );
 
-  return `Всего ${count} ${sum > 1 ? 'товаров' : 'товар'}, на сумму ${sum}`;
+  return `Всего ${count} ${count > 1 ? 'товаров' : 'товар'}, на сумму ${sum.toFixed(2)}`;
 });
 
 const cleanUp = () => {
@@ -46,7 +47,6 @@ const cleanUp = () => {
   <template v-if="basketList?.length">
     <div class="overflow-auto">
       <Table class="w-full">
-        <TableCaption>Список добавленных товаров.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead class="w-[50px]">
@@ -55,20 +55,22 @@ const cleanUp = () => {
             <TableHead>
               Наименование
             </TableHead>
-            <TableHead class="w-[150px]">
+            <TableHead class="w-[200px]">
               Количество
             </TableHead>
             <TableHead class="w-[250px]">
               Цена за единицу
             </TableHead>
-            <TableHead class="text-right">
+            <TableHead class="text-right w-[250px]">
               Итого
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow v-for="({ price, title, id, quantity, image }, index) in basketList"
-:key="id">
+          <TableRow
+            v-for="({ price, title, id, quantity, image }, index) in basketList"
+            :key="id"
+          >
             <TableCell class="font-medium">
               {{ index + 1 }}
             </TableCell>
@@ -79,25 +81,31 @@ const cleanUp = () => {
                   :src="image"
                   :alt="title"
                   class="w-[50px] h-full max-h-[70px] object-contain"
-                />
+                >
                 <span class="ml-2">
-                {{ title }}
-              </span>
+                  {{ title }}
+                </span>
               </div>
             </TableCell>
             <TableCell>
-              <div class="flex items-center justify-center space-x-1">
-                <Button variant="outline"
-size="xs"
-                        @click="basketStore.changeQuantityById([id, '-'])"
-                >-</Button>
+              <div class="flex items-center justify-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="xs"
+                  @click="basketStore.changeQuantityById([id, '-'])"
+                >
+                  -
+                </Button>
                 <div>
                   {{ quantity }}
                 </div>
-                <Button variant="outline"
-size="xs"
-                        @click="basketStore.changeQuantityById([id, '+'])"
-                >+</Button>
+                <Button
+                  variant="outline"
+                  size="xs"
+                  @click="basketStore.changeQuantityById([id, '+'])"
+                >
+                  +
+                </Button>
               </div>
             </TableCell>
             <TableCell>{{ price }}</TableCell>
@@ -128,8 +136,10 @@ size="xs"
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button type="submit"
-@click="cleanUp">
+            <Button
+              type="submit"
+              @click="cleanUp"
+            >
               Закрыть
             </Button>
           </DialogFooter>
@@ -138,8 +148,10 @@ size="xs"
     </div>
   </template>
 
-  <div v-else
-class="font-semibold text-lg mx-auto pt-6 flex flex-col justify-center items-center pb-6">
+  <div
+    v-else
+    class="font-semibold text-lg mx-auto pt-6 flex flex-col justify-center items-center pb-6"
+  >
     <span class="pb-6">
       Корзина пуста
     </span>

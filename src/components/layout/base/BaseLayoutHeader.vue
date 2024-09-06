@@ -11,29 +11,33 @@ const basketStore = useBasketStore();
 </script>
 
 <template>
-  <header class="flex-col md:flex border-b-4">
+  <header class="flex-col md:flex border-b-4 bg-blue-50">
     <div class="container flex justify-between py-3 sm:py-4 items-center">
-      <RouterLink to="/"
-class="flex items-center">
+      <RouterLink
+        to="/"
+        class="flex items-center"
+      >
         <MainLogoIcon />
         <span class="ml-2 hidden sm:inline-block font-semibold text-sm">
-            RZD Shop
+          RZD Shop
         </span>
       </RouterLink>
 
-      <Button @click="router.push('/basket');"
-size="sm"
-class="relative">
+      <Button
+        @click="router.push('/basket');"
+        size="sm"
+        class="relative"
+      >
         <Badge
           v-if="basketStore.basketItemsIds.length"
           variant="destructive"
-class="absolute top-[-10px] right-[-10px]"
+          class="absolute top-[-10px] right-[-10px]"
         >
           {{ basketStore.basketItemsIds.length }}
         </Badge>
         <BasketIcon />
         <span class="ml-2 hidden sm:inline-block">
-            Корзина
+          Корзина
         </span>
       </Button>
     </div>

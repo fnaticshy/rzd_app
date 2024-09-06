@@ -18,16 +18,17 @@ const onSubmit = handleSubmit((values) => {
   authStore.login({ ...values, id: Date.now() });
   router.push('/');
 });
-
 </script>
 
 <template>
   <div class="overflow-y-auto overflow-x-hidden top-0 right-0 left-0 m-auto z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full flex">
-    <div class="relative p-4 w-full max-w-xl max-h-full m-auto">
-      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+    <div class="relative p-4 w-full max-w-xl max-h-full m-auto ">
+      <div class="relative rounded-lg shadow-2xl dark:bg-gray-700 bg-blue-50">
         <div class="p-4 md:p-5">
           <div class="w-full">
-            <h1 class="text-center text-2xl font-medium">Форма авторизации</h1>
+            <h1 class="text-center text-2xl font-medium">
+              Форма авторизации
+            </h1>
 
             <form
               class="space-y-6"
@@ -66,7 +67,7 @@ const onSubmit = handleSubmit((values) => {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      type="text"
+                      type="password"
                       placeholder="Введите пароль"
                       v-bind="componentField"
                     />

@@ -6,7 +6,8 @@ module.exports = {
   'extends': [
     'plugin:vue/vue3-essential',
     'eslint:recommended',
-    '@vue/eslint-config-prettier/skip-formatting'
+    '@vue/eslint-config-prettier/skip-formatting',
+    'plugin:vue/vue3-strongly-recommended'
   ],
   parserOptions: {
     ecmaVersion: 'latest'
@@ -31,6 +32,7 @@ module.exports = {
       }
     }],
     // 'vue/multi-word-component-names': ['error', { 'ignores': ['index', 'default']}], // Компоненты, для которых правило не применяется
+    'vue/require-default-prop': 0,
     'vue/multi-word-component-names': 0, // Компоненты, для которых правило не применяется
     'padding-line-between-statements': [
       'error',
