@@ -7,7 +7,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="flex flex-col flex-grow">
+  <div class="flex flex-col flex-grow w-full">
     <BaseLayoutHeader v-if="isHeaderVisible" />
 
     <main class="container py-3 flex-grow">

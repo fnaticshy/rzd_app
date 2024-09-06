@@ -11,7 +11,7 @@ const router = useRouter();
 const { isFieldDirty, handleSubmit } = useForm({
   validationSchema: {
     email: 'required|email',
-    password: 'required'
+    password: 'required|min:5'
   }
 });
 const onSubmit = handleSubmit((values) => {
@@ -39,6 +39,7 @@ const onSubmit = handleSubmit((values) => {
                 name="email"
                 label="Email"
                 :validate-on-blur="!isFieldDirty"
+                :validate-on-model-update="false"
               >
                 <FormItem>
                   <FormLabel class="first-letter:uppercase">
